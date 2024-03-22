@@ -1,3 +1,4 @@
 /venv
 /.idea
 app_for_dip/__pycache__/
+config/__pycache__/

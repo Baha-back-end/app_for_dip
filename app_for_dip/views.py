@@ -7,12 +7,10 @@ def index(request):
     categories = Category.objects.all()
     products = Product.objects.all()
 
-
-
     context = {
         "title": "Главная страница",
         "categories": categories,
         "products": products
     }
 
-    return render(request, "index.html", context)
+    return render(request, "main_page.html", context)
