@@ -6,6 +6,48 @@
 
 {% block main %}
 
+<div class="container mb-3 mt-3">
+    <div class="d-flex justify-content-between">
+        <div class="col-8">
+            {% for product in products %}
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <a href="{% url 'product_parameters' product.id %}">
+                            <img src="..." class="img-fluid rounded-start" alt="...">
+                        </a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">{{ product.parameters }}</p>
+                            <p class="card-text">
+                                <small class="text-body-secondary">
+                                    {{ product.added_at }}
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
+        <div class="col-4">
+            {% for product in hot_products %}
+            <div class="card mb-1 text-bg-dark">
+                <a href="{% url 'product_parameters' product.id %}">
+                    <img src="data:image/png;base64,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" class="card-img" alt="...">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p class="card-text">{{ product.parameters }}</p>
+                        <p class="card-text"><small>{{ product.added_at }}</small></p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 {% endblock main %}
