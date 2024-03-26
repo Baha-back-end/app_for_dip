@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 {{ title }}
 {% endblock title %}
@@ -8,7 +8,8 @@
 <div class="container mt-3 mb-3">
     <div class="d-flex justify-content-around">
         {% for category in categories %}
-        <a href="{% url 'category' category.id %}" class="btn btn-outline-success btn-lg">
+        <a href="{% url 'category' category.id %}"
+           class="btn btn-outline-success btn-lg shadow">
             <b>{{ category.title }}</b>
         </a>
         {% endfor %}
@@ -23,9 +24,9 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <div class="d-flex fustify-content-between">
+                    <div class="d-flex justify-content-between">
                         <div>
-                            <b>Категория: {{ prduct.category }}</b>
+                            <b>Категория: {{ product.category }}</b>
                         </div>
                         <div>
                             <b>Отзвы: {{ product.reviews }}</b>
@@ -35,7 +36,13 @@
 
                 </div>
                 <a href="{% url 'product_parameters' product.id %}">
-                    <img src="..." class="card-img-top" alt="...">
+                    <img src="{% if product.photo.url %}
+                              {{ product.photo.url }}
+                              {% else %}
+                              {% static 'app_for_dip/images/card_static.png' %}
+                              {% endif %}"
+                         class="card-img-top"
+                         alt="...">
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">{{ prduct.title }}</h5>
