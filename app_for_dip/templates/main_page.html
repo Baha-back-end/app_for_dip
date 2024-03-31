@@ -36,8 +36,8 @@
 
                 </div>
                 <a href="{% url 'product_parameters' product.id %}">
-                    <img src="{% if product.photo.url %}
-                              {{ product.photo.url }}
+                    <img src="{% if product.image %}
+                              {{ product.image.url }}
                               {% else %}
                               {% static 'app_for_dip/images/card_static.png' %}
                               {% endif %}"

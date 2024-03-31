@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 {{ title }}
 {% endblock title %}
@@ -10,6 +10,101 @@
 
 {% block main %}
 
+<div class="container mt-3 mb-3">
 
+    <div class="d-flex justify-content-between">
+
+        <div class="col-7">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <b>Категория: {{ product.category.title }}</b>
+                        </div>
+                        <div>
+                            <a href="" class="btn btn-danger">
+                                <b>Удалить</b>
+                            </a>
+                            <a href="" class="btn btn-warning">
+                                <b>Изменить</b>
+                            </a>
+                            <a href="" class="btn btn-success">
+                                <b>Назад</b>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <img src="{{ product.image.url }}" alt="" class="">
+
+                <div class="card-body">
+                    <h5 class="text-center" >{{ product.title }}</h5>
+                    <p>{{ product.description }}</p>
+                    <h7>Характеристики: {{ product.parameters }}</h7>
+
+                </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <b>{{ product.added_at }}</b>
+                        </div>
+                        <div>
+                            <b>Отзвы: {{ product.reviews }}</b>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            {% for product in new_products %}
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <b>Категория: {{ product.category }}</b>
+                        </div>
+                        <div>
+                            <b>Отзвы: {{ product.reviews }}</b>
+                        </div>
+
+                    </div>
+
+                </div>
+                <a href="{% url 'product_parameters' product.id %}">
+                    <img src="{% if product.image %}
+                              {{ product.image.url }}
+                              {% else %}
+                              {% static 'app_for_dip/images/card_static.png' %}
+                              {% endif %}"
+                         class="card-img-top"
+                         alt="...">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ prduct.title }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex fustify-content-between">
+                        <div>
+                            <b>Цена: {{ product.price }}</b>
+                        </div>
+                        <div>
+                            <b>Дата добавления: {{ product.added_at }}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+</div>
 
 {% endblock main %}

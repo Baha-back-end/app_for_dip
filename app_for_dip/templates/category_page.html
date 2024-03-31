@@ -15,8 +15,8 @@
                     <div class="col-md-4">
                         <a href="{% url 'product_parameters' product.id %}">
                             <img src="
-                                          {% if product.photo.url %}
-                                          {{ product.photo.url }}
+                                          {% if product.image %}
+                                          {{ product.image.url }}
                                           {% else %}
                                           {% static 'app_for_dip/images/card_static.png' %}
                                           {% endif %}
@@ -46,15 +46,15 @@
             <div class="card mb-1 text-bg-dark">
                 <a href="{% url 'product_parameters' product.id %}">
                     <img src="
-                                  {% if product.photo.url %}
-                                  {{ product.photo.url }}
+                                  {% if product.image %}
+                                  {{ product.image.url }}
                                   {% else %}
                                   {% static 'app_for_dip/images/card_static.png' %}
                                   {% endif %}
                              "
                          class="card-img"
                          alt="...">
-                    <div class="card-img-overlay">
+                    <div class="card-img-overlay text-black">
                         <h5 class="card-title">{{ product.title }}</h5>
                         <p class="card-text">{{ product.parameters }}</p>
                         <p class="card-text"><small>{{ product.added_at }}</small></p>

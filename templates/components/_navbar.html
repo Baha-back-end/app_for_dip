@@ -1,78 +1,90 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-        <div class="container ">
-            <a class="navbar-brand" href="#">
-                <img src="{% static 'app_for_dip/images/logo.png' %}"
-                     alt=""
-                     width="55"
-                >
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <div class="container ">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="{% static 'app_for_dip/images/logo.png' %}"
+                 alt=""
+                 width="55"
+            >
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active"
+                       aria-current="page"
+                       href="{% url 'about_us' %}">
+                        О нас
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'contact_with_us' %}">
+                        Связаться с нами
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'shops' %}">
+                        Магазыны
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Вы вошли в: {{ request.user.username }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                    </ul>
                     <li class="nav-item">
-                        <a class="nav-link active"
-                           aria-current="page"
-                           href="{% url 'about_us' %}">
-                            О нас
-                        </a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                Корзина
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Смотреть корзину</a></li>
+                                <li><a class="dropdown-item" href="{% url 'add_product' %}">Покупать</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Продольжать смотреть товары</a></li>
+                            </ul>
+                        </li>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="{% url 'contact_with_us' %}">
-                            Связаться с нами
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="{% url 'shops' %}">
-                            Магазыны
-                        </a>
-                    </li>
-                </ul>
+                </li>
+
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'login' %}">
+                        Login in
+                    </a>
+                </li>
 
 
-                <ul class="navbar-nav  mb-2 mb-lg-0">
-                    <li class="nav_item">
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2" type="search" placeholder="поиск" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Поиск</button>
-                        </form>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
-                            Вход
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Регистрация
-                        </a>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Корзина
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Смотреть корзину</a></li>
-                            <li><a class="dropdown-item" href="#">Покупать</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Продольжать смотреть товары</a></li>
-                        </ul>
-                    </li>
-
-                </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">
+                        Sign in
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
 
 
-            </div>
         </div>
-    </nav>
+    </div>
+</nav>
