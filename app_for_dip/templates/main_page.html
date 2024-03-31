@@ -35,7 +35,7 @@
                     </div>
 
                 </div>
-                <a href="{% url 'product_parameters' product.id %}">
+                <a href="{% url 'product_detail' product.id %}">
                     <img src="{% if product.image %}
                               {{ product.image.url }}
                               {% else %}

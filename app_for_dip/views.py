@@ -1,12 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 
-
-
-
 from .models import *
 from .forms import *
-
 
 
 def index(request):
@@ -42,6 +38,7 @@ def about_us_page_view(request):
 
     return render(request, "about_us.html", context)
 
+
 def contact_with_us_page_view(request):
     context = {
         "title": "Связаться с нами"
@@ -58,8 +55,7 @@ def shops_page_view(request):
     return render(request, "shops.html", context)
 
 
-
-def product_parameters_page_view(request, product_id):
+def product_detail_page_view(request, product_id):
     product = Product.objects.get(id=product_id)
     new_products = Product.objects.all().order_by('-added_at')[:8]
 
@@ -69,7 +65,8 @@ def product_parameters_page_view(request, product_id):
         "new_products": new_products,
 
     }
-    return render(request, 'product_parameters.html', context)
+    return render(request, 'product_detail.html', context)
+
 
 def add_product_view(request):
     if request.method == "POST":
@@ -101,6 +98,7 @@ def user_register_view(request):
     }
     return render(request, "register.html", context)
 
+
 def user_login_view(request):
     if request.method == "POST":
         form = UserLoginForm(data=request.POST)
@@ -127,3 +125,68 @@ def user_login_view(request):
 def logout_user_view(request):
     logout(request)
     return redirect('index')
+
+
+def update_product_view(request, product_id):
+    product = Product.objects.get(id=product_id)
+
+    if request.method == 'POST':
+        form = ProductForm(instance=product,
+                           data=request.POST,
+                           files=request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("product_detail", product_id)
+        else:
+            # TODO: ERROR MESSAGE
+            return redirect("update_product", product_id)
+    else:
+        form = ProductForm(instance=product)
+
+    context = {
+        "form": form,
+        "title": "Обновить товар"
+    }
+    return render(request, "add_product.html", context)
+
+
+
+def delete_product_view(request, product_id):
+    product = Product.objects.get(id=product_id)
+
+    if request.method == "POST":
+        product.delete()
+        return redirect("index")
+
+    context = {
+        "title": "Удаление товара",
+        "product": product
+    }
+
+    return render(request, "delete.html", context)
+
+
+
+
+def search_view(request):
+    word = request.GET.get("q")
+    categories = Category.objects.all()
+    producs = Product.objects.filter(
+        title__iregex=word
+    )
+    context = {
+        "products": producs,
+        "categories": categories,
+        "title": "Результаты поиска"
+
+    }
+
+    return render(request, "main_page.html", context)
+
+
+
+
+
+
+
+

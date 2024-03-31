@@ -13,7 +13,7 @@
             <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <a href="{% url 'product_parameters' product.id %}">
+                        <a href="{% url 'product_detail' product.id %}">
                             <img src="
                                           {% if product.image %}
                                           {{ product.image.url }}
@@ -44,7 +44,7 @@
         <div class="col-4">
             {% for product in hot_products %}
             <div class="card mb-1 text-bg-dark">
-                <a href="{% url 'product_parameters' product.id %}">
+                <a href="{% url 'product_detail' product.id %}">
                     <img src="
                                   {% if product.image %}
                                   {{ product.image.url }}

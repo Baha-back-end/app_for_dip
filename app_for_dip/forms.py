@@ -13,6 +13,22 @@ class ProductForm(forms.ModelForm):
                   'description',
                   'image',
                   'category')
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Название товара"
+            }),
+            "description": forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": "Характеристики товара"
+            }),
+            "image": forms.FileInput(attrs={
+                "class": "form-control"
+            }),
+            "category": forms.Select(attrs={
+                "class": "form-control"
+            })
+        }
 
 
 class UserLoginForm(AuthenticationForm):

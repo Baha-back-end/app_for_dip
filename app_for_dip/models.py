@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -45,7 +46,33 @@ class Contact_with_us(models.Model):
         return self.full_name
 
 
+class Profile(models.Model):
+    phone = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        default="********"
+    )
+    mobile = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        default="********")
+    address = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        default="********")
+    job = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        default="********")
+    image = models.ImageField(upload_to=' profiles/', null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.user.username
 
 
 
