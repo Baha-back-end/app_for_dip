@@ -5,6 +5,7 @@ from .models import *
 from .forms import *
 
 
+
 def index(request):
     categories = Category.objects.all()
     products = Product.objects.all()
@@ -86,6 +87,7 @@ def user_register_view(request):
         form = UserRegistrationForm(data=request.POST)
         if form.is_valid():
             user = form.save()
+            profile = Profile.objects.create(user=user)
             return redirect('login')
         else:
             # TODO: ERROR MESSAGE
@@ -150,7 +152,6 @@ def update_product_view(request, product_id):
     return render(request, "add_product.html", context)
 
 
-
 def delete_product_view(request, product_id):
     product = Product.objects.get(id=product_id)
 
@@ -164,8 +165,6 @@ def delete_product_view(request, product_id):
     }
 
     return render(request, "delete.html", context)
-
-
 
 
 def search_view(request):
@@ -184,9 +183,41 @@ def search_view(request):
     return render(request, "main_page.html", context)
 
 
+def profile_page_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    profile = Profile.objects.get(user=user)
+
+    context = {
+        "profile": profile,
+        "title": "Мой профиль"
+    }
+
+    return render(request, "profile.html", context)
 
 
+def edit_profile_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    profile = Profile.objects.get(user=user)
 
+    if request.method == "POST":
+        user_form = UserForm(instance=user, data=request.POST)
+        profile_form = ProfileForm(instance=profile, data=request.POST,
+                                   files=request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect("profile", user.id)
+        else:
+            # TODO: ERROR MESSAGE
+            return redirect("edit_profile.html", user.id)
+    else:
+        user_form = UserForm(instance=user)
+        profile_form = ProfileForm(instance=profile)
 
-
+    context = {
+        "user_form": user_form,
+        "profile_form": profile_form,
+        "title": "Изменить профиль"
+    }
+    return render(request, "edit_profile.html", context)
 

@@ -15,5 +15,7 @@ urlpatterns = [
     path('user_logout/', logout_user_view, name="logout"),
     path('update_product/<int:product_id>/', update_product_view, name='update_product'),
     path('delete_product/<int:product_id>/', delete_product_view, name="delete_product"),
-    path('search/', search_view, name="search")
+    path('search/', search_view, name="search"),
+    path("profile/<int:user_id>/", profile_page_view, name="profile"),
+    path("edit_profile/<int:user_id>/", edit_profile_view, name="edit_profile")
 ]
