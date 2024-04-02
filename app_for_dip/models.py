@@ -15,10 +15,13 @@ class Product(models.Model):
                               null=True, blank=True)
     parameters = models.TextField(default='', null=True)
     price = models.FloatField(max_length=12, null=True)
-    reviews = models.TextField(default='', null=True)
+    reviews = models.IntegerField(default=0)
     added_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+
     def __str__(self):
         return self.title
 
@@ -73,6 +76,15 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    porduct = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return self.author
 
 
 

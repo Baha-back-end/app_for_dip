@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-from .models import Product, Profile
+from .models import Product, Profile, Comment
 
 
 class ProductForm(forms.ModelForm):
@@ -132,3 +132,15 @@ class UserForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'username', 'email')
 
 
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                "class": "formo-control",
+                "palceholder": "Напишите отзыв к товару!",
+                "rows": 10
+            })
+        }

@@ -22,11 +22,14 @@
                             <b>Категория: {{ product.category.title }}</b>
                         </div>
                         <div>
-                            <a href="{% url 'delete_product' product.pk %}" class="btn btn-danger">
+                            {% if request.user.id == product.author.id %}
+                            <a href="{% url 'delete_product' product.pk %}"
+                               class="btn btn-danger">
                                 <b>Удалить</b>
                             </a>
                             <a href="{% url 'update_product' product.pk %}" class="btn btn-warning">
                                 <b>Изменить</b>
+                            {% endif %}
                             </a>
                             <a href="{% url 'index' %}" class="btn btn-success">
                                 <b>Назад</b>
@@ -40,8 +43,12 @@
                 <div class="card-body">
                     <h5 class="text-center" >{{ product.title }}</h5>
                     <p>{{ product.description }}</p>
-                    <h7>Характеристики: {{ product.parameters }}</h7>
-
+                    <h6>Автор:
+                        <a href="{% url 'profile' product.author.id %}">
+                            {{ product.author }}
+                        </a>
+                    </h6>
+                    <h6>Характеристики: {{ product.parameters }}</h6>
                 </div>
 
                 <div class="card-footer">
@@ -50,7 +57,7 @@
                             <b>{{ product.added_at }}</b>
                         </div>
                         <div>
-                            <b>Отзвы: {{ product.reviews }}</b>
+                            <b>Просмотры: {{ product.reviews }}</b>
                         </div>
 
                     </div>
@@ -68,7 +75,7 @@
                             <b>Категория: {{ product.category }}</b>
                         </div>
                         <div>
-                            <b>Отзвы: {{ product.reviews }}</b>
+                            <b>Просмотры: {{ product.reviews }}</b>
                         </div>
 
                     </div>
@@ -85,7 +92,7 @@
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">{{ prduct.title }}</h5>
-                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">{{ product.description|truncatewords:20 }}</p>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex fustify-content-between">

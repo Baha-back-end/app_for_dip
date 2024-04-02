@@ -29,7 +29,7 @@
                             <b>Категория: {{ product.category }}</b>
                         </div>
                         <div>
-                            <b>Отзвы: {{ product.reviews }}</b>
+                            <b>Просмотры: {{ product.reviews }}</b>
                         </div>
 
                     </div>
@@ -46,10 +46,18 @@
                 </a>
                 <div class="card-body">
                     <h5 class="card-title">{{ prduct.title }}</h5>
-                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">{{ product.description|truncatewords:20 }}</p>
                 </div>
                 <div class="card-footer">
-                    <div class="d-flex fustify-content-between">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <b>Автор:
+                                <a href="{% url 'profile' product.author.id %}">
+                                    {{ product.author }}
+                                </a>
+                            </b>
+                        </div>
+
                         <div>
                             <b>Цена: {{ product.price }}</b>
                         </div>

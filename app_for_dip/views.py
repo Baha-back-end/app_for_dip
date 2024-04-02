@@ -60,6 +60,11 @@ def product_detail_page_view(request, product_id):
     product = Product.objects.get(id=product_id)
     new_products = Product.objects.all().order_by('-added_at')[:8]
 
+    if request.user.id != product.author.id:
+        product.reviews += 1
+        product.save()
+
+
     context = {
         "title": f"Товар: {product.title}",
         "product": product,
@@ -71,7 +76,16 @@ def product_detail_page_view(request, product_id):
 
 def add_product_view(request):
     if request.method == "POST":
-        pass
+        form = ProductForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.author = request.user
+            product.save()
+            return redirect("product_detail", product.id)
+        else:
+            # TODO: ERROR MESSAGE
+            return redirect("add_product")
+
     elif request.method == "GET":
         form = ProductForm()
 
