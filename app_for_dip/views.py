@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .forms import *
-
 
 
 def index(request):
@@ -59,21 +60,26 @@ def shops_page_view(request):
 def product_detail_page_view(request, product_id):
     product = Product.objects.get(id=product_id)
     new_products = Product.objects.all().order_by('-added_at')[:8]
-
+    comments = Comment.objects.filter(product=product_id)
     if request.user.id != product.author.id:
         product.reviews += 1
         product.save()
-
 
     context = {
         "title": f"Товар: {product.title}",
         "product": product,
         "new_products": new_products,
-
+        "comments": comments
     }
+    if request.user.is_authenticated:
+        context.update({
+            "form": CommentForm()
+        })
+
     return render(request, 'product_detail.html', context)
 
 
+@login_required(login_url="login")
 def add_product_view(request):
     if request.method == "POST":
         form = ProductForm(data=request.POST, files=request.FILES)
@@ -81,9 +87,11 @@ def add_product_view(request):
             product = form.save(commit=False)
             product.author = request.user
             product.save()
+            messages.success(request, "Товар добавлен успешно !")
             return redirect("product_detail", product.id)
         else:
-            # TODO: ERROR MESSAGE
+            for field in form.errors:
+                messages.error(request, form.errors[field].as_text())
             return redirect("add_product")
 
     elif request.method == "GET":
@@ -102,10 +110,13 @@ def user_register_view(request):
         if form.is_valid():
             user = form.save()
             profile = Profile.objects.create(user=user)
+            profile.save()
+            messages.success(request, "Профиль создано успешно")
             return redirect('login')
         else:
-            # TODO: ERROR MESSAGE
-            pass
+            for field in form.errors:
+                messages.error(request, form.errors[field].as_text())
+            return redirect('register')
     else:
         form = UserRegistrationForm()
     context = {
@@ -122,13 +133,14 @@ def user_login_view(request):
             user = form.get_user()
             if user:
                 login(request, user)
+                messages.success(request, "Вы вошли в аккаунт !")
                 return redirect('index')
             else:
-                # TODO: ERROR MESSAGE
-                pass
+                messages.error(request, "Логин или пароль введен не верно!")
+                return redirect('login')
         else:
-            # TODO: ERROR MESSAGE
-            pass
+            messages.error(request, "Логин или пароль введен не верно!")
+            return redirect('login')
     else:
         form = UserLoginForm()
     context = {
@@ -137,12 +149,13 @@ def user_login_view(request):
     }
     return render(request, "login.html", context)
 
-
+@login_required(login_url="login")
 def logout_user_view(request):
     logout(request)
+    messages.info(request, "Вы вышли с аккаунта!")
     return redirect('index')
 
-
+@login_required(login_url="login")
 def update_product_view(request, product_id):
     product = Product.objects.get(id=product_id)
 
@@ -152,9 +165,11 @@ def update_product_view(request, product_id):
                            files=request.FILES)
         if form.is_valid():
             form.save()
+            messages.info(request, "Товар успешно обновлен!")
             return redirect("product_detail", product_id)
         else:
-            # TODO: ERROR MESSAGE
+            for field in form.errors:
+                messages.error(request, form.errors[field].as_text())
             return redirect("update_product", product_id)
     else:
         form = ProductForm(instance=product)
@@ -165,12 +180,13 @@ def update_product_view(request, product_id):
     }
     return render(request, "add_product.html", context)
 
-
+@login_required(login_url="login")
 def delete_product_view(request, product_id):
     product = Product.objects.get(id=product_id)
 
     if request.method == "POST":
         product.delete()
+        messages.warning(request, "Товар удален!")
         return redirect("index")
 
     context = {
@@ -191,12 +207,11 @@ def search_view(request):
         "products": producs,
         "categories": categories,
         "title": "Результаты поиска"
-
     }
-
+    messages.info(request, "Результаты поиска!")
     return render(request, "main_page.html", context)
 
-
+@login_required(login_url="login")
 def profile_page_view(request, user_id):
     user = User.objects.get(id=user_id)
     profile = Profile.objects.get(user=user)
@@ -208,7 +223,7 @@ def profile_page_view(request, user_id):
 
     return render(request, "profile.html", context)
 
-
+@login_required(login_url="login")
 def edit_profile_view(request, user_id):
     user = User.objects.get(id=user_id)
     profile = Profile.objects.get(user=user)
@@ -220,9 +235,14 @@ def edit_profile_view(request, user_id):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.success(request, "Данные профиля успешно обновлены!")
             return redirect("profile", user.id)
         else:
-            # TODO: ERROR MESSAGE
+            for field in user_form.errors:
+                messages.error(request, user_form.errors[field].as_text())
+            for field in profile_form:
+                messages.error(request, profile_form.errors[field].as_text())
+
             return redirect("edit_profile.html", user.id)
     else:
         user_form = UserForm(instance=user)
@@ -235,3 +255,14 @@ def edit_profile_view(request, user_id):
     }
     return render(request, "edit_profile.html", context)
 
+@login_required(login_url="login")
+def save_comment(request, product_id):
+    product = Product.objects.get(id=product_id)
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.product = product
+        comment.author = request.user
+        comment.save()
+        messages.success(request, "Отзыв добавлен успешно!")
+        return redirect('product_detail', product_id)

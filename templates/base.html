@@ -32,6 +32,11 @@
 </header>
 
 <main>
+
+    {% block messages %}
+    {% include 'components/_messages.html' %}
+    {% endblock messages %}
+
     {% block main %}
 
     {% endblock main %}

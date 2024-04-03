@@ -139,8 +139,9 @@ class CommentForm(forms.ModelForm):
         fields = ('text',)
         widgets = {
             'text': forms.Textarea(attrs={
-                "class": "formo-control",
-                "palceholder": "Напишите отзыв к товару!",
-                "rows": 10
+                "class": "form-control",
+                "placeholder": "Напишите отзыв к товару!",
+                "rows": 5
             })
         }
+

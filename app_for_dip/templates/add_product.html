@@ -11,16 +11,26 @@
 {% block main %}
 
 <div class="container mt-3 mb-3">
-    <form action="" method="" enctype="multipart/form-data">
-        {% csrf_token %}
+    <div class="d-flex justify-content-center">
+        <div class="col-6">
+            <div class="card p-3 shadow">
+                <form action="" method="" enctype="multipart/form-data">
+                    {% csrf_token %}
 
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">
-            Добавить товар
-        </button>
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">
+                        {% if 'update' in request.path %}
+                        Обновить товар
+                        {% else %}
+                        Добавить товар
+                        {% endif %}
+                    </button>
 
 
-    </form>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock main %}
